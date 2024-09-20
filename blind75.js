@@ -779,3 +779,7 @@ var longestZigZag = function(root) {
     dfsz(root,'l',0);
     return max;
 };
+
+var lowestCommonAncestor = function(root, p, q) {
+    
+};
