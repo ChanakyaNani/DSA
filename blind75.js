@@ -781,5 +781,13 @@ var longestZigZag = function(root) {
 };
 
 var lowestCommonAncestor = function(root, p, q) {
-    
+    if(!root || root == p || root == q) return root; 
+    //If you don't explicitly return a value in a recursive function, it will return null (or undefined in JavaScript).
+//This behavior is what allows the recursive calls to naturally backtrack in your lowestCommonAncestor function, correctly identifying when p or q is not found in a particular subtree and passing that result up the stack.
+//This implicit return of null is fundamental to making the recursive search efficient and logical when traversing binary trees or any recursive structure.
+
+    var resL = lowestCommonAncestor(root.left,p,q); 
+    var resR = lowestCommonAncestor(root.right,p,q);
+    return ((resL && resR) ? root : (resL || resR));
 };
+
