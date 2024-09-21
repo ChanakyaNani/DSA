@@ -791,3 +791,73 @@ var lowestCommonAncestor = function(root, p, q) {
     return ((resL && resR) ? root : (resL || resR));
 };
 
+var rightSideView = function(root) {
+    if(!root) return [];
+    let res = [];
+    let queue = [];
+    queue.push(root);
+    while(queue.length){
+        let n = queue.length;
+        let values = [];
+        for(let i=0;i<n;i++){
+            let node = queue.shift();
+            if(node.left) queue.push(node.left);
+            if(node.right) queue.push(node.right);
+            values.push(node.val);
+        }
+        res.push(values.pop());
+    }
+    return res;
+};
+
+var maxLevelSum = function(root) {
+    let sums = [];
+
+    function mls(node,d){
+        if(!node) return ;
+        sums[d] = (sums[d] ?? 0) + node.val; // nullish coalescing operator.
+        
+        mls(node.left,d+1);
+        mls(node.right,d+1);
+    }
+    mls(root,0);
+
+    //return sums.findIndex(v => v == Math.max(...sums)) + 1; // implicit return in arrow function
+    return sums.findIndex(v => {
+        return v == Math.max(...sums); // when curly braces are used in arrow function, we have to explicitly return, otherwise it'll not return anything
+    }) + 1;
+    
+};
+
+var searchBST = function(root, val) {
+    if(!root) return null;
+    if(root.val == val) return root;
+    if(val < root.val) return searchBST(root.left,val);
+    else if(val > root.val) return searchBST(root.right,val);
+};
+
+var deleteNode = function(root, key) {
+    
+    function dn(node,val){
+        if(!node) return null; // this return 'null' is important, not just return; (which returns undefined). BST nodes should either be node instances or null but not undefined
+        if(val < node.val){
+            node.left = dn(node.left,val);
+        }else if(val > node.val){
+            node.right = dn(node.right,val);
+        }else{
+            if(!node.left && !node.right) return null;
+            if(!node.left) return node.right;
+            if(!node.right) return node.left;
+            node.val = min(node.right); // get the min val of the right sub tree to repalce the current node val.
+            node.right = dn(node.right,node.val); // then delete that min value in the right sub tree, since it is no longer needed
+        }
+        return node;
+    }
+    return dn(root,key);
+
+    function min(node){
+        if(!node.left) return node.val;
+        return min(node.left);
+    }
+
+};
